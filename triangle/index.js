@@ -27,18 +27,6 @@ function main() {
 
   var indices = [0, 1, 2];
 
-  // var vertices = [
-  //   DeviceToNormalized(640, canvas.width),
-  //   DeviceToNormalized(0, canvas.height),
-  //   0.0,
-  //   0.5,
-  //   -0.5,
-  //   0.0,
-  //   1.0,
-  //   1.0,
-  //   0.0,
-  // ];
-
   var vertex_buffer = gl.createBuffer();
 
   //   Bind array buffer
@@ -49,6 +37,19 @@ function main() {
 
   // Unbind buffer once its done
   gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+  // Do the same with indices
+  var index_buffer = gl.createBuffer();
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
+
+  gl.bufferData(
+    gl.ELEMENT_ARRAY_BUFFER,
+    new Uint16Array(indices),
+    gl.STATIC_DRAW
+  );
+
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
   //   Setup shaders
   var vertCode =
@@ -90,6 +91,7 @@ function main() {
 
   // bind vertex buffer object
   gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
 
   // get buffer location
   var coord = gl.getAttribLocation(shaderProgram, "coordinates");
@@ -107,5 +109,5 @@ function main() {
 
   gl.viewport(0, 0, canvas.width, canvas.height);
 
-  gl.drawArrays(gl.POINTS, 0, 3);
+  gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
 }
